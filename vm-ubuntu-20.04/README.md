@@ -80,12 +80,8 @@ cd build
 make -j2 check |& tee make-check-out.txt
 ```
 
-As of 2021-09-07, the p4c compiler passes all but 61 of its included
+As of 2021-11-01, the p4c compiler passes all but 60 of its included
 tests.
-
-The test named cpplint fails because Python2 is not installed on the
-system.  Omitting Python2 is intentional for this VM.  The cpplint
-test passes fine on other systems that have Python2 installed.
 
 There are 60 tests whose names begin with 'ebpf' and 'ubpf' that fail.
 They work fine in the continuous integration tests on the
@@ -126,7 +122,7 @@ $ make stop
 # Creating a single file image of the VM
 
 For the particular case of creating the VM named 'P4 Tutorial
-2021-09-07' on September 7, 2021, here were the host OS details, in
+2021-11-01' on November 1, 2021, here were the host OS details, in
 case it turns out that matters to the finished VM image for some
 reason:
 
@@ -137,7 +133,7 @@ reason:
 In the VirtualBox GUI interface:
 
 + Choose menu item File -> Export Appliance ...
-+ Select the VM named 'P4 Tutorial 2021-09-07' and click Continue button
++ Select the VM named 'P4 Tutorial 2021-11-01' and click Continue button
 
 + Format
   + I used: Open Virtualization Format 1.0
@@ -145,7 +141,7 @@ In the VirtualBox GUI interface:
     + Open Virtualization Format 0.9
     + Open Virtualization Format 2.0
 + Target file
-  + I used: /Users/andy/Documents/P4 Tutorial 2021-09-07.ova
+  + I used: /Users/andy/Documents/P4 Tutorial 2021-11-01.ova
 + Mac Address Policy
   + I used: Include only NAT network adapter MAC addresses
   + Other available options were:
@@ -159,16 +155,16 @@ Clicked "Continue" button.
 
 Virtual system settings:
 
-+ Name: P4 Tutorial 2021-09-07
++ Name: P4 Tutorial 2021-11-01
 + Product: I left this blank
 + Product-URL: I left this blank
 + Vendor: P4.org - P4 Language Consortium
 + Vendor-URL: https://p4.org
-+ Version: 2021-09-07
++ Version: 2021-11-01
 + Description:
 
 ```
-Open source P4 development tools built from latest source code as of 2021-Sep-07 and packaged into an Ubuntu 20.04 Desktop Linux VM for the AMD64 architecture.
+Open source P4 development tools built from latest source code as of 2021-Nov-01 and packaged into an Ubuntu 20.04 Desktop Linux VM for the AMD64 architecture.
 ```
 
 + License
