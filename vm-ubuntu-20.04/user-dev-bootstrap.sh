@@ -171,8 +171,6 @@ find /usr/lib /usr/local $HOME/.local | sort > $HOME/usr-local-4-after-PI.txt
 git clone https://github.com/p4lang/behavioral-model.git
 cd behavioral-model
 git checkout ${BMV2_COMMIT}
-PATCH_DIR="${HOME}/patches"
-patch -p1 < "${PATCH_DIR}/behavioral-model-use-correct-libssl-pkg.patch" || echo "Errors while attempting to patch behavioral-model, but continuing anyway ..."
 ./install_deps.sh
 ./autogen.sh
 ./configure --enable-debugger --with-pi
