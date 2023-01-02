@@ -105,7 +105,7 @@ cd build
 make -j2 check |& tee make-check-out.txt
 ```
 
-As of 2022-04-02, the p4c compiler passes all but 64 of its included
+As of 2023-01-01, the p4c compiler passes all but 69 of its included
 tests.
 
 The relatively small group of tests whose names begin with 'ebpf' and
@@ -153,8 +153,8 @@ them again.
 
 For the particular case of creating the VM named:
 
-+ 'P4 Tutorial Development 2022-04-02'
-+ created on April 2, 2022
++ 'P4 Tutorial Development 2023-01-01'
++ created on January 1, 2023
 
 here were the host OS details, in case it turns out that matters to
 the finished VM image for some reason:
@@ -166,7 +166,7 @@ the finished VM image for some reason:
 In the VirtualBox GUI interface:
 
 + Choose menu item File -> Export Appliance ...
-+ Select the VM named 'P4 Tutorial Development 2022-04-02' and click
++ Select the VM named 'P4 Tutorial Development 2023-01-01' and click
   Continue button
 
 + Format
@@ -175,7 +175,7 @@ In the VirtualBox GUI interface:
     + Open Virtualization Format 0.9
     + Open Virtualization Format 2.0
 + Target file
-  + I used: /Users/andy/Documents/P4 Tutorials Development 2022-04-02.ova
+  + I used: /Users/andy/Documents/P4 Tutorials Development 2023-01-01.ova
 + Mac Address Policy
   + I used: Include only NAT network adapter MAC addresses
   + Other available options were:
@@ -189,16 +189,16 @@ Clicked "Continue" button.
 
 Virtual system settings:
 
-+ Name: P4 Tutorial 2022-04-02
++ Name: P4 Tutorial 2023-01-01
 + Product: I left this blank
 + Product-URL: I left this blank
 + Vendor: P4.org - P4 Language Consortium
 + Vendor-URL: https://p4.org
-+ Version: 2022-04-02
++ Version: 2023-01-01
 + Description:
 
 ```
-Open source P4 development tools built from latest source code as of 2022-Apr-02 and packaged into an Ubuntu 20.04 Desktop Linux VM for the AMD64 architecture.
+Open source P4 development tools built from latest source code as of 2023-Jan-01 and packaged into an Ubuntu 20.04 Desktop Linux VM for the AMD64 architecture.
 ```
 
 + License
