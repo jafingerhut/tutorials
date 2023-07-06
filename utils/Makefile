@@ -32,10 +32,10 @@ endif
 all: run
 
 run: build
-	sudo python3 $(RUN_SCRIPT) -t $(TOPO) $(run_args)
+	sudo PATH=$(PATH) python3 $(RUN_SCRIPT) -t $(TOPO) $(run_args)
 
 stop:
-	sudo mn -c
+	sudo `which mn` -c
 
 build: dirs $(compiled_json)
 
