@@ -1,23 +1,13 @@
 # Creating the VM
-+ Below are the steps to create a brand new VM using Vagrant:
-  + Install [Vagrant](https://developer.hashicorp.com/vagrant/docs/installation) on your system if it's not already installed.
-  + Navigate to the directory where you want to create the new VM.
-  + Run the below command in the terminal.
-    
-    ```
-    vagrant up
-    ```
 
-  - This command will initiate the creation of a release VM.
-  - The VM will include P4 software installed from pre-compiled packages.
-  - You can update these packages using `apt upgrade` within the VM.
+Start creating a brand new VM by running `vagrant up` in this
+directory (install Vagrant on your system if needed). This command
+creates a _release_ VM that includes P4 software installed from
+pre-compiled packages and allows to update those packages with `apt
+upgrade`.
 
-+ Alternatively, a development VM can be created by running 
-  ```
-  vagrant up dev
-  ```
-
-*Note* : that creating a development VM can take one to several
+Alternatively, a development VM can be created by running `vagrant up
+dev`.  Note that creating a development VM can take one to several
 hours, depending upon the speed of your computer and Internet
 connection.
 
@@ -35,24 +25,15 @@ once per month.
   version released for Ubuntu 20.04, and other updated packages.
 + Reboot the system.
 + This is optional, but if you want to save a little disk space, use
-  
-  ```
-  sudo apt purge <list of packages>
-  ```
-  
-  to remove older version of Linux
+  `sudo apt purge <list of packages>` to remove older version of Linux
   kernel, if the upgrade installed a newer one.
-+ Clean the local repository of retrieved package files to free up disk space
-  
-  ```
-  sudo apt clean
-  ```
-  
++ `sudo apt clean`
+
 + Log in as user p4 (password p4)
 + Start menu -> Preferences -> LXQt settings -> Monitor settings
   + Change resolution from initial 800x600 to 1024x768.  Apply the changes.
   + Close monitor settings window
-  + *Note*: For some reason I do not know, these settings seem to be
+  + Note: For some reason I do not know, these settings seem to be
     undone, even if I use the "Save" button.  They are temporarily in
     effect if I shut down the system and log back in, but then in a few
     seconds it switches back to 800x600.  Strange.
@@ -79,12 +60,7 @@ once per month.
 + Change monitor settings and wallpaper mode as described above for
   user p4.
 + Open a terminal.
-  + Run the command
-    
-    ```
-    ./clean.sh
-    ```
-    which removes about 6 to 7 GBytes of
+  + Run the command `./clean.sh`, which removes about 6 to 7 GBytes of
     files created while building the projects.
 + Log off
 
@@ -110,8 +86,7 @@ version of source code used to create that image already included in
 the home directory of the `vagrant` user account:
 
 ```bash
-# for Release VM image only 
-git clone --recursive https://github.com/p4lang/p4c
+# git clone --recursive https://github.com/p4lang/p4c
 ```
 
 The following steps are common for both Release and Development VM
@@ -129,13 +104,13 @@ cd build
 make -j2 check |& tee make-check-out.txt
 ```
 
-As of 2023-07-01, the p4c compiler passes all of its included tests,
+As of 2024-05-01, the p4c compiler passes all of its included tests,
 except for some of the p4testgen tests (if those are enabled).
 
 
 ## Send ping packets in the solution to `basic` exercise of `p4lang/tutorials` repository
 
-With the version of the [tutorials](https://github.com/p4lang/tutorials) repository
+With the version of the https://github.com/p4lang/tutorials repository
 that comes pre-installed in the `p4` user account of this VM, the
 following tests pass.
 
@@ -169,8 +144,8 @@ them again.
 
 For the particular case of creating the VM named:
 
-+ 'P4 Tutorial Development 2023-07-01'
-+ created on July 1, 2023
++ 'P4 Tutorial Development 2024-05-01'
++ created on May 1, 2024
 
 here were the host OS details, in case it turns out that matters to
 the finished VM image for some reason:
@@ -182,7 +157,7 @@ the finished VM image for some reason:
 In the VirtualBox GUI interface:
 
 + Choose menu item File -> Export Appliance ...
-+ Select the VM named 'P4 Tutorial Development 2023-07-01' and click
++ Select the VM named 'P4 Tutorial Development 2024-05-01' and click
   Continue button
 
 + Format
@@ -191,7 +166,7 @@ In the VirtualBox GUI interface:
     + Open Virtualization Format 0.9
     + Open Virtualization Format 2.0
 + Target file
-  + I used: /Users/andy/Documents/P4 Tutorials Development 2023-07-01.ova
+  + I used: /Users/andy/Documents/P4 Tutorials Development 2024-05-01.ova
 + Mac Address Policy
   + I used: Include only NAT network adapter MAC addresses
   + Other available options were:
@@ -205,16 +180,16 @@ Clicked "Continue" button.
 
 Virtual system settings:
 
-+ Name: P4 Tutorial 2023-07-01
++ Name: P4 Tutorial 2024-05-01
 + Product: I left this blank
 + Product-URL: I left this blank
 + Vendor: P4.org - P4 Language Consortium
 + Vendor-URL: https://p4.org
-+ Version: 2023-07-01
++ Version: 2024-05-01
 + Description:
 
 ```
-Open source P4 development tools built from latest source code as of 2023-Jul-01 and packaged into an Ubuntu 20.04 Desktop Linux VM for the AMD64 architecture.
+Open source P4 development tools built from latest source code as of 2024-May-01 and packaged into an Ubuntu 20.04 Desktop Linux VM for the AMD64 architecture.
 ```
 
 + License
