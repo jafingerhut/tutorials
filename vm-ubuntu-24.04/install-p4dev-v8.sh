@@ -1043,11 +1043,9 @@ TIME_PTF_START=$(date +%s)
 # Ubuntu 22.04.
 #sudo pip3 install pypcap
 
-git clone https://github.com/p4lang/ptf
+git clone https://github.com/jafingerhut/ptf
 cd ptf
-if [ "x${INSTALL_PTF_SOURCE_VERSION}" != "x" ]; then
-    git checkout ${INSTALL_PTF_SOURCE_VERSION}
-fi
+git checkout replace-netutils-with-apache-2.0-version
 git log -n 1
 pip install .
 TIME_PTF_END=$(date +%s)
