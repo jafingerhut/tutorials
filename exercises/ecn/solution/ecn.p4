@@ -89,15 +89,23 @@ control MyVerifyChecksum(inout headers hdr, inout metadata meta) {
 control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
+    direct_meter<bit<2>>(MeterType.bytes) mymeter1;
+
     action drop() {
         mark_to_drop(standard_metadata);
     }
 
     action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
+        bit<2> this_pkt_color;
         standard_metadata.egress_spec = port;
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
         hdr.ethernet.dstAddr = dstAddr;
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
+        mymeter1.read(this_pkt_color);
+        log_msg("this_pkt_color={}", {this_pkt_color});
+        if (this_pkt_color == V1MODEL_METER_COLOR_RED) {
+            mark_to_drop(standard_metadata);
+        }
     }
 
     table ipv4_lpm {
@@ -109,6 +117,7 @@ control MyIngress(inout headers hdr,
             drop;
             NoAction;
         }
+        meters = mymeter1;
         size = 1024;
         default_action = NoAction();
     }
