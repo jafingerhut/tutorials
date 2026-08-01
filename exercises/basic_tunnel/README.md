@@ -1,5 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2018 Nate Foster
 
-[comment]: # (SPDX-License-Identifier:  Apache-2.0)
+SPDX-License-Identifier: Apache-2.0
+-->
 
 # Implementing Basic Tunneling
 
@@ -192,6 +195,12 @@ make stop
 
 Congratulations, your implementation works! Move onto the next assignment
 [p4runtime](../p4runtime)!
+
+## Automated Tests
+
+These tests are maintained to support CI/CD and help contributors verify 
+that the solution continues to work correctly across changes. PTF tests 
+are located in the `ptf/` directory and run against the solution program.
 
 ## Relevant Documentation
 

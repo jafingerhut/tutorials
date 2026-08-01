@@ -1,4 +1,7 @@
 #! /bin/bash
+
+# SPDX-FileCopyrightText: 2024 Andy Fingerhut
+#
 # SPDX-License-Identifier: Apache-2.0
 
 # Copyright 2022-present Intel Corporation
@@ -408,7 +411,7 @@ echo "+ behavioral-model: github.com/p4lang/behavioral-model latest version"
 echo "  which, as of 2023-Sep-22, also installs these things:"
 echo "  + thrift version 0.16.0"
 echo "  + nanomsg version 1.0.0"
-echo "  + nnpy latest version available via 'pip install'"
+echo "  + pynng version 0.9.0"
 echo "+ p4c: github.com/p4lang/p4c latest version"
 echo "+ ptf: github.com/p4lang/ptf latest version"
 echo "+ Mininet: github.com/mininet/mininet latest version as of 2024-Sep-18"
@@ -846,8 +849,8 @@ else
     git log -n 1
     TIME_BEHAVIORAL_MODEL_INSTALL_START=$(date +%s)
     PATCH_DIR="${THIS_SCRIPT_DIR_ABSOLUTE}/patches"
-    patch -p1 < "${PATCH_DIR}/behavioral-model-support-fedora.patch"
-    patch -p1 < "${PATCH_DIR}/behavioral-model-support-venv.patch"
+    patch -p1 < "${PATCH_DIR}/behavioral-model-adjust-ubuntu-packges.patch"
+    patch -p1 < "${PATCH_DIR}/behavioral-model-support-venv-2026-apr.patch"
     # This command installs Thrift, which I want to include in my build of
     # simple_switch_grpc
     ./install_deps.sh
