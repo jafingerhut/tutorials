@@ -30,11 +30,13 @@ print_usage() {
     1>&2 echo ""
     1>&2 echo "Dates supported:"
     1>&2 echo "    2026-Jun-01"
+    1>&2 echo "    2026-Jul-04"
+    1>&2 echo "    2026-Aug-01"
 }
 
 if [ $# -eq 0 ]
 then
-    VERSION="2026-Jul-04"
+    VERSION="2026-Aug-01"
     echo "No version specified.  Defaulting to ${VERSION}"
 elif [ $# -eq 1 ]
 then
@@ -45,6 +47,12 @@ else
 fi
 
 case ${VERSION} in
+    2026-Aug-01)
+	export INSTALL_BEHAVIORAL_MODEL_SOURCE_VERSION="883d4eae360de7b6ad0aaf52ba6d30a2401cd0e0"
+	export INSTALL_PI_SOURCE_VERSION="577b502da91b7d17e4be5821d49d481dc2e1bb7a"
+	export INSTALL_P4C_SOURCE_VERSION="cdd7205767895d49291bbf0addc2c45f052f5079"
+	export INSTALL_PTF_SOURCE_VERSION="680f96b23ee0ba3702691e4b1d2a39122eaa8ecb"
+	;;
     2026-Jul-04)
 	export INSTALL_BEHAVIORAL_MODEL_SOURCE_VERSION="05ce6940a559ea87da180cf8288bf078735a7148"
 	export INSTALL_PI_SOURCE_VERSION="749760bb9ecc820e6cc46a777ea37ed078467318"
