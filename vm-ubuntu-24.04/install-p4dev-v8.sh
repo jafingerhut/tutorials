@@ -142,24 +142,26 @@ max_of_list() {
 
 dump_python_lib_info() {
     local output_dir=$1
+    set +e
     mkdir -p ${output_dir}
     outf=${output_dir}/dirs.txt
     echo "All directories named site-packages or dist-packages:" > ${outf}
-    find / -name site-packages -o -name dist-packages > ${outf}
-    echo "" > ${outf}
-    echo "ls -la on each such directory:" > ${outf}
-    for d in $(find / -name site-packages -o -name dist-packages)
+    find / -name site-packages -o -name dist-packages | sort >> ${outf}
+    echo "" >> ${outf}
+    echo "ls -la on each such directory:" >> ${outf}
+    for d in $(find / -name site-packages -o -name dist-packages | sort)
     do
-	echo $d > ${outf}
-	ls -la $d > ${outf}
+	echo $d >> ${outf}
+	ls -la $d >> ${outf}
     done
-    echo "" > ${outf}
-    echo "ls -laR on each such directory:" > ${outf}
-    for d in $(find / -name site-packages -o -name dist-packages)
+    echo "" >> ${outf}
+    echo "ls -laR on each such directory:" >> ${outf}
+    for d in $(find / -name site-packages -o -name dist-packages | sort)
     do
-	echo $d > ${outf}
-	ls -laR $d > ${outf}
+	echo $d >> ${outf}
+	ls -laR $d >> ${outf}
     done
+    set -e
 }
 
 # Change this to a lower value if you do not like all this extra debug
