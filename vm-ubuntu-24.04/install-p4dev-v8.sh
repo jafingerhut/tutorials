@@ -140,6 +140,28 @@ max_of_list() {
     echo ${max}
 }
 
+dump_python_lib_info() {
+    local output_dir=$1
+    mkdir -p ${output_dir}
+    outf=${output_dir}/dirs.txt
+    echo "All directories named site-packages or dist-packages:" > ${outf}
+    find / -name site-packages -o -name dist-packages > ${outf}
+    echo "" > ${outf}
+    echo "ls -la on each such directory:" > ${outf}
+    for d in $(find / -name site-packages -o -name dist-packages)
+    do
+	echo $d > ${outf}
+	ls -la $d > ${outf}
+    done
+    echo "" > ${outf}
+    echo "ls -laR on each such directory:" > ${outf}
+    for d in $(find / -name site-packages -o -name dist-packages)
+    do
+	echo $d > ${outf}
+	ls -laR $d > ${outf}
+    done
+}
+
 # Change this to a lower value if you do not like all this extra debug
 # output.  It is occasionally useful to debug why Python package
 # install files, or other files installed system-wide, are not going
@@ -474,6 +496,10 @@ pip -V  || echo "No such command in PATH: pip"
 pip2 -V || echo "No such command in PATH: pip2"
 pip3 -V || echo "No such command in PATH: pip3"
 
+DEBUG_DUMP_DIR="${HOME}/install-p4dev-dumpdir"
+mkdir -p ${DEBUG_DUMP_DIR}
+dump_python_lib_info "${DEBUG_DUMP_DIR}/01-init"
+
 # On new systems if you have never checked repos you should do that first
 
 # Install a few packages (vim is not strictly necessary -- installed for
@@ -507,6 +533,8 @@ then
 	 autoconf automake libtool curl make g++ unzip \
 	 pkg-config python3-pip
 fi
+
+dump_python_lib_info "${DEBUG_DUMP_DIR}/02-after-python-apt-installs"
 
 if [ \( "${ID}" = "ubuntu" -a "${VERSION_ID}" = "20.04" \) -o \( "${ID}" = "fedora" -a "${VERSION_ID}" = "35" \) ]
 then
@@ -581,6 +609,7 @@ pip3 list || echo "Some error occurred attempting to run command: pip3"
 
 cd "${INSTALL_DIR}"
 debug_dump_many_install_files ${INSTALL_DIR}/usr-local-1-before-protobuf.txt
+dump_python_lib_info "${DEBUG_DUMP_DIR}/03-before-installing-grpc"
 
 set +x
 echo "------------------------------------------------------------"
@@ -598,6 +627,7 @@ then
     if [ "${PROTOBUF_VERSION_FOR_PIP}" != "" ]
     then
 	pip3 install protobuf==${PROTOBUF_VERSION_FOR_PIP}
+	dump_python_lib_info "${DEBUG_DUMP_DIR}/04-after-installing-protobuf-via-pip"
     fi
     TIME_GRPC_INSTALL_END=$(date +%s)
     pip3 list
@@ -609,6 +639,7 @@ else
     if [ "${PROTOBUF_VERSION_FOR_PIP}" != "" ]
     then
 	pip3 install protobuf==${PROTOBUF_VERSION_FOR_PIP}
+	dump_python_lib_info "${DEBUG_DUMP_DIR}/04-after-installing-protobuf-via-pip"
     fi
 
     cd "${INSTALL_DIR}"
@@ -676,6 +707,7 @@ else
 	sudo make install
 	cd ../..
 	sudo ldconfig
+	dump_python_lib_info "${DEBUG_DUMP_DIR}/05-after-installing-grpc-from-source"
 	# Without the following command, later the command 'pkg-config
 	# --cflags grpc' fails, at least on Ubuntu 23.10 after building
 	# grpc v1.54.2
@@ -732,6 +764,8 @@ echo "Installing p4lang/PI, needed for installing p4lang/behavioral-model simple
 echo "start install PI:"
 set -x
 date
+
+dump_python_lib_info "${DEBUG_DUMP_DIR}/06-before-PI"
 
 TIME_PI_CLONE_START=$(date +%s)
 TIME_PI_CLONE_END=$(date +%s)
@@ -807,6 +841,8 @@ echo "end install PI:"
 set -x
 date
 
+dump_python_lib_info "${DEBUG_DUMP_DIR}/07-before-behavioral-model"
+
 cd "${INSTALL_DIR}"
 debug_dump_many_install_files ${INSTALL_DIR}/usr-local-4-after-PI.txt
 
@@ -854,6 +890,7 @@ else
     # This command installs Thrift, which I want to include in my build of
     # simple_switch_grpc
     ./install_deps.sh
+    dump_python_lib_info "${DEBUG_DUMP_DIR}/08-after-behavioral-model-install_deps"
     # simple_switch_grpc README.md says to configure and build the bmv2
     # code first, using these commands:
     ./autogen.sh
@@ -868,9 +905,11 @@ else
     make
     sudo make install-strip
     sudo ldconfig
+    dump_python_lib_info "${DEBUG_DUMP_DIR}/09-after-behavioral-model-install"
     # 'sudo make install-strip' installs several files in ${PYTHON_VENV}
     # with root owner.  Change them to be owned by the regular user id.
     change_owner_and_group_of_venv_lib_python3_files ${PYTHON_VENV}
+    dump_python_lib_info "${DEBUG_DUMP_DIR}/10-after-behavioral-model-change_owner"
     DISK_USED_BEFORE_BMV2_CLEANUP=`get_used_disk_space_in_mbytes`
     if [ ${CLEAN_UP_AS_WE_GO} -eq 1 ]
     then
@@ -893,6 +932,8 @@ date
 
 cd "${INSTALL_DIR}"
 debug_dump_many_install_files ${INSTALL_DIR}/usr-local-5-after-behavioral-model.txt
+
+dump_python_lib_info "${DEBUG_DUMP_DIR}/11-before-p4c"
 
 set +x
 echo "------------------------------------------------------------"
@@ -931,6 +972,8 @@ fi
 pip3 install scapy==2.5.0 ply
 pip3 list
 
+dump_python_lib_info "${DEBUG_DUMP_DIR}/12-before-p4c-after-install-scapy"
+
 DISK_USED_BEFORE_P4C_CLEANUP=`get_used_disk_space_in_mbytes`
 if [ -d p4c ]
 then
@@ -957,6 +1000,7 @@ else
     MAX_PARALLEL_JOBS=`max_parallel_jobs 2048`
     make -j${MAX_PARALLEL_JOBS}
     sudo make install/strip
+    dump_python_lib_info "${DEBUG_DUMP_DIR}/13-after-p4c-install"
     sudo ldconfig
     DISK_USED_BEFORE_P4C_CLEANUP=`get_used_disk_space_in_mbytes`
     if [ ${CLEAN_UP_AS_WE_GO} -eq 1 -a ${KEEP_P4C_BUILD_FOR_TESTING} -eq 0 ]
@@ -991,6 +1035,8 @@ echo "start install mininet:"
 set -x
 date
 
+dump_python_lib_info "${DEBUG_DUMP_DIR}/14-before-mininet"
+
 TIME_MININET_START=$(date +%s)
 # Pin to a particular version, so that I know the patch below will
 # continue to apply.  Will likely want to update this to newer
@@ -1015,6 +1061,7 @@ then
     RESTORE_SUDOERS_FILE=1
 fi
 PYTHON=python3 ./mininet/util/install.sh -nw
+dump_python_lib_info "${DEBUG_DUMP_DIR}/15-after-mininet"
 if [ ${RESTORE_SUDOERS_FILE} -eq 1 ]
 then
     sudo mv /etc/sudoers.d/sudoers-dotfiles.orig /etc/sudoers.d/sudoers-dotfiles
@@ -1046,6 +1093,7 @@ TIME_PTF_START=$(date +%s)
 # Ubuntu 22.04.
 #sudo pip3 install pypcap
 
+dump_python_lib_info "${DEBUG_DUMP_DIR}/16-before-ptf"
 git clone https://github.com/p4lang/ptf
 cd ptf
 if [ "x${INSTALL_PTF_SOURCE_VERSION}" != "x" ]; then
@@ -1054,6 +1102,7 @@ fi
 git log -n 1
 pip install .
 TIME_PTF_END=$(date +%s)
+dump_python_lib_info "${DEBUG_DUMP_DIR}/17-after-ptf"
 echo "p4lang/ptf             : $(($TIME_PTF_END-$TIME_PTF_START)) sec"
 
 set +x
@@ -1080,6 +1129,7 @@ then
     sudo dnf -y install gflags-devel net-tools
 fi
 pip3 install psutil crcmod
+dump_python_lib_info "${DEBUG_DUMP_DIR}/18-after-pip-install-psutil-crcmod"
 
 # Install p4runtime-shell from source repo, with a slightly modified
 # setup.cfg file so that it allows us to keep the version of the
@@ -1093,6 +1143,7 @@ pip3 install psutil crcmod
 # otherwise installing p4runtime-shell packages will likely pick some
 # very recent version of grpcio that may cause trouble.
 pip3 install wheel
+dump_python_lib_info "${DEBUG_DUMP_DIR}/19-after-pip-install-wheel"
 if [ "${ID}" == "ubuntu" -a "${VERSION_ID}" == "24.04" ]
 then
     # Version 1.51.3 fails to install on Ubuntu 24.04 as of
@@ -1101,6 +1152,7 @@ then
 else
     pip3 install grpcio==1.51.3
 fi
+dump_python_lib_info "${DEBUG_DUMP_DIR}/20-after-pip-install-grpcio"
 
 git clone https://github.com/p4lang/p4runtime-shell
 cd p4runtime-shell
@@ -1111,6 +1163,7 @@ git log -n 1
 PATCH_DIR="${THIS_SCRIPT_DIR_ABSOLUTE}/patches"
 patch -p1 < "${PATCH_DIR}/p4runtime-shell-2023-changes.patch"
 pip3 install .
+dump_python_lib_info "${DEBUG_DUMP_DIR}/21-after-pip-install-p4runtime-shell"
 
 pip3 list
 
