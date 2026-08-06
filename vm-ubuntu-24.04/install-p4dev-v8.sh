@@ -154,11 +154,13 @@ dump_python_lib_info() {
 	echo $d >> ${outf}
 	ls -la $d >> ${outf}
     done
-    echo "" >> ${outf}
-    echo "ls -laR on each such directory:" >> ${outf}
+    #echo "" >> ${outf}
+    #echo "ls -laR on each such directory:" >> ${outf}
     for d in $(find / -name site-packages -o -name dist-packages | sort)
     do
-	echo $d >> ${outf}
+	outf="${output_dir}/ls-laR-of-$(echo "$d" | tr '/' '-')"
+	cp /dev/null ${outf}
+	#echo $d >> ${outf}
 	ls -laR $d >> ${outf}
     done
     set -e
