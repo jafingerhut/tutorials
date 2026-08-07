@@ -1,8 +1,41 @@
 diff --git a/ci/install-nanomsg.sh b/ci/install-nanomsg.sh
-index 675a329..833b444 100644
+index 675a329..2dec6cb 100644
 --- a/ci/install-nanomsg.sh
 +++ b/ci/install-nanomsg.sh
-@@ -22,5 +22,7 @@ cd build
+@@ -4,6 +4,32 @@
+ #
+ # SPDX-License-Identifier: Apache-2.0
+ 
++dump_python_lib_info() {
++    local output_dir=$1
++    set +e
++    mkdir -p ${output_dir}
++    outf=${output_dir}/dirs.txt
++    echo "All directories named site-packages or dist-packages:" > ${outf}
++    find / -name site-packages -o -name dist-packages | sort >> ${outf}
++    echo "" >> ${outf}
++    echo "ls -la on each such directory:" >> ${outf}
++    for d in $(find / -name site-packages -o -name dist-packages | sort)
++    do
++	echo $d >> ${outf}
++	ls -la $d >> ${outf}
++    done
++    #echo "" >> ${outf}
++    #echo "ls -laR on each such directory:" >> ${outf}
++    for d in $(find / -name site-packages -o -name dist-packages | sort)
++    do
++	outf="${output_dir}/ls-laR-of-$(echo "$d" | tr '/' '-')"
++	cp /dev/null ${outf}
++	#echo $d >> ${outf}
++	ls -laR $d >> ${outf}
++    done
++    set -e
++}
++
+ THIS_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+ source $THIS_DIR/common.sh
+ 
+@@ -22,5 +48,7 @@ cd build
  # some reason ldconfig cannot find it
  cmake .. -DCMAKE_INSTALL_PREFIX=/usr
  cmake --build .
