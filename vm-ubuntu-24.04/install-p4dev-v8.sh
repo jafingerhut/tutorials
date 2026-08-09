@@ -596,6 +596,9 @@ DISK_USED_AFTER_AUTOTOOLS=`get_used_disk_space_in_mbytes`
 
 # Install uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
+echo $PATH
+source $HOME/.local/bin/env
+echo $PATH
 which uv
 uv pip list
 
