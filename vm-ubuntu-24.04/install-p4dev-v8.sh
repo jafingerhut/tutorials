@@ -594,12 +594,18 @@ TIME_AUTOTOOLS_END=$(date +%s)
 echo "autotools              : $(($TIME_AUTOTOOLS_END-$TIME_AUTOTOOLS_START)) sec"
 DISK_USED_AFTER_AUTOTOOLS=`get_used_disk_space_in_mbytes`
 
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+which uv
+uv pip list
+
 # Create a new Python virtual environment using venv.  Later we will
 # attempt to ensure that all new Python packages installed are
 # installed into this virtual environment, not into system-wide
 # directories like /usr/local/bin
 dump_python_lib_info "${DEBUG_DUMP_DIR}/008-just-before-venv-creation"
-python3 -m venv "${PYTHON_VENV}"
+#python3 -m venv "${PYTHON_VENV}"
+uv venv "${PYTHON_VENV}"
 source "${PYTHON_VENV}/bin/activate"
 
 pip -V  || echo "No such command in PATH: pip"
@@ -612,6 +618,8 @@ pip3 -V || echo "No such command in PATH: pip3"
 # execution.
 pip list  || echo "Some error occurred attempting to run command: pip"
 pip3 list || echo "Some error occurred attempting to run command: pip3"
+
+uv pip list
 
 cd "${INSTALL_DIR}"
 debug_dump_many_install_files ${INSTALL_DIR}/usr-local-1-before-protobuf.txt
@@ -633,11 +641,11 @@ then
     if [ "${PROTOBUF_VERSION_FOR_PIP}" != "" ]
     then
 	dump_python_lib_info "${DEBUG_DUMP_DIR}/013-just-before-installing-protobuf-via-pip"
-	pip3 install protobuf==${PROTOBUF_VERSION_FOR_PIP}
+	uv pip install protobuf==${PROTOBUF_VERSION_FOR_PIP}
 	dump_python_lib_info "${DEBUG_DUMP_DIR}/015-after-installing-protobuf-via-pip"
     fi
     TIME_GRPC_INSTALL_END=$(date +%s)
-    pip3 list
+    uv pip list
 else
     # Do not bother installing protobuf package from source code, as
     # whatever parts of protobuf we need is installed as a result of
@@ -646,7 +654,7 @@ else
     if [ "${PROTOBUF_VERSION_FOR_PIP}" != "" ]
     then
 	dump_python_lib_info "${DEBUG_DUMP_DIR}/013-just-before-installing-protobuf-via-pip"
-	pip3 install protobuf==${PROTOBUF_VERSION_FOR_PIP}
+	uv pip install protobuf==${PROTOBUF_VERSION_FOR_PIP}
 	dump_python_lib_info "${DEBUG_DUMP_DIR}/015-after-installing-protobuf-via-pip"
     fi
 
@@ -982,8 +990,8 @@ fi
 # TODO: It appears that some changes were made from scapy 2.5.0 to
 # 2.6.0 that require changes in P4 open source tools in order to use
 # version 2.6.0.  Until those changes are made, install scapy 2.5.0.
-pip3 install scapy==2.5.0 ply
-pip3 list
+uv pip install scapy==2.5.0 ply
+uv pip list
 
 dump_python_lib_info "${DEBUG_DUMP_DIR}/055-before-p4c-after-install-scapy"
 
@@ -1114,7 +1122,7 @@ if [ "x${INSTALL_PTF_SOURCE_VERSION}" != "x" ]; then
 fi
 git log -n 1
 dump_python_lib_info "${DEBUG_DUMP_DIR}/078-ptf-just-before-pip-install"
-pip install .
+uv pip install .
 dump_python_lib_info "${DEBUG_DUMP_DIR}/080-ptf-just-after-pip-install"
 TIME_PTF_END=$(date +%s)
 echo "p4lang/ptf             : $(($TIME_PTF_END-$TIME_PTF_START)) sec"
@@ -1143,7 +1151,7 @@ then
     sudo dnf -y install gflags-devel net-tools
 fi
 dump_python_lib_info "${DEBUG_DUMP_DIR}/084-before-pip-install-psutil-crcmod"
-pip3 install psutil crcmod
+uv pip install psutil crcmod
 dump_python_lib_info "${DEBUG_DUMP_DIR}/085-after-pip-install-psutil-crcmod"
 
 # Install p4runtime-shell from source repo, with a slightly modified
@@ -1157,15 +1165,15 @@ dump_python_lib_info "${DEBUG_DUMP_DIR}/085-after-pip-install-psutil-crcmod"
 # First install a known working version of the grpcio package, because
 # otherwise installing p4runtime-shell packages will likely pick some
 # very recent version of grpcio that may cause trouble.
-pip3 install wheel
+uv pip install wheel
 dump_python_lib_info "${DEBUG_DUMP_DIR}/090-after-pip-install-wheel"
 if [ "${ID}" == "ubuntu" -a "${VERSION_ID}" == "24.04" ]
 then
     # Version 1.51.3 fails to install on Ubuntu 24.04 as of
     # 2024-May-20.
-    pip3 install grpcio==1.59.3
+    uv pip install grpcio==1.59.3
 else
-    pip3 install grpcio==1.51.3
+    uv pip install grpcio==1.51.3
 fi
 dump_python_lib_info "${DEBUG_DUMP_DIR}/095-after-pip-install-grpcio"
 
@@ -1178,7 +1186,7 @@ git log -n 1
 PATCH_DIR="${THIS_SCRIPT_DIR_ABSOLUTE}/patches"
 patch -p1 < "${PATCH_DIR}/p4runtime-shell-2023-changes.patch"
 dump_python_lib_info "${DEBUG_DUMP_DIR}/099-p4runtime-shell-just-before-pip-install"
-pip3 install .
+uv pip install .
 dump_python_lib_info "${DEBUG_DUMP_DIR}/100-p4runtime-shell-just-after-pip-install"
 
 pip3 list
