@@ -149,6 +149,24 @@ def printCounter(p4info_helper, sw, counter_name, index):
                 counter.data.packet_count, counter.data.byte_count
             ))
 
+def printRegister(p4info_helper, sw, register_name, index):
+    """
+    Reads the specified counter at the specified index from the switch. In our
+    program, the index is the tunnel ID. If the index is 0, it will return all
+    values from the counter.
+
+    :param p4info_helper: the P4Info helper
+    :param sw:  the switch connection
+    :param counter_name: the name of the counter from the P4 program
+    :param index: the counter index (in our case, the tunnel ID)
+    """
+    for response in sw.ReadRegister(p4info_helper.get_register_id(register_name), index):
+        for entity in response.entities:
+            counter = entity.register_entry
+            print("%s %s %d: register entry data %s" % (
+                sw.name, register_name, index, register.data
+            ))
+
 def printGrpcError(e):
     print("gRPC Error:", e.details(), end=' ')
     status_code = e.code()
@@ -205,9 +223,11 @@ def main(p4info_file_path, bmv2_file_path):
             sleep(2)
             print('\n----- Reading tunnel counters -----')
             printCounter(p4info_helper, s1, "MyIngress.ingressTunnelCounter", 100)
-            printCounter(p4info_helper, s2, "MyIngress.egressTunnelCounter", 100)
-            printCounter(p4info_helper, s2, "MyIngress.ingressTunnelCounter", 200)
-            printCounter(p4info_helper, s1, "MyIngress.egressTunnelCounter", 200)
+            for idx in range(0, 3):
+                printRegister(p4info_helper, s1, "MyIngress.per_ingress_port_packet_count", idx)
+            #printCounter(p4info_helper, s2, "MyIngress.egressTunnelCounter", 100)
+            #printCounter(p4info_helper, s2, "MyIngress.ingressTunnelCounter", 200)
+            #printCounter(p4info_helper, s1, "MyIngress.egressTunnelCounter", 200)
 
     except KeyboardInterrupt:
         print(" Shutting down.")

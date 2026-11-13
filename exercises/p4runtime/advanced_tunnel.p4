@@ -167,7 +167,14 @@ control MyIngress(inout headers hdr,
         default_action = drop();
     }
 
+    bit<32> idx;
+    bit<18> pkt_count;
+    register<bit<18>>(512) per_ingress_port_packet_count;
+
     apply {
+        idx = (bit<32>) standard_metadata.ingress_port;
+        per_ingress_port_packet_count.read(pkt_count, idx);
+        per_ingress_port_packet_count.write(idx, pkt_count + 1);
         if (hdr.ipv4.isValid() && !hdr.myTunnel.isValid()) {
             // Process only non-tunneled IPv4 packets.
             ipv4_lpm.apply();
